@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0B1929"/>
+  <!-- Nodo central -->
+  <circle cx="256" cy="256" r="48" fill="#00D4AA"/>
+  <!-- Nodos satélite -->
+  <circle cx="256" cy="100" r="28" fill="#028090"/>
+  <circle cx="256" cy="412" r="28" fill="#028090"/>
+  <circle cx="100" cy="256" r="28" fill="#028090"/>
+  <circle cx="412" cy="256" r="28" fill="#028090"/>
+  <circle cx="150" cy="150" r="20" fill="#00A896" opacity="0.7"/>
+  <circle cx="362" cy="150" r="20" fill="#00A896" opacity="0.7"/>
+  <circle cx="150" cy="362" r="20" fill="#00A896" opacity="0.7"/>
+  <circle cx="362" cy="362" r="20" fill="#00A896" opacity="0.7"/>
+  <!-- Líneas de conexión -->
+  <line x1="256" y1="208" x2="256" y2="128" stroke="#00A896" stroke-width="6" stroke-linecap="round"/>
+  <line x1="256" y1="304" x2="256" y2="384" stroke="#00A896" stroke-width="6" stroke-linecap="round"/>
+  <line x1="208" y1="256" x2="128" y2="256" stroke="#00A896" stroke-width="6" stroke-linecap="round"/>
+  <line x1="304" y1="256" x2="384" y2="256" stroke="#00A896" stroke-width="6" stroke-linecap="round"/>
+  <line x1="222" y1="222" x2="164" y2="164" stroke="#00A896" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <line x1="290" y1="222" x2="348" y2="164" stroke="#00A896" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <line x1="222" y1="290" x2="164" y2="348" stroke="#00A896" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <line x1="290" y1="290" x2="348" y2="348" stroke="#00A896" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <!-- Pulso / ECG en el centro -->
+  <polyline points="216,256 230,230 244,275 256,240 268,275 282,230 296,256" fill="none" stroke="#0B1929" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
