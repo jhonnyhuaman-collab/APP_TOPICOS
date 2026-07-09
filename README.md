@@ -57,11 +57,11 @@ El servidor queda en `http://<IP-EC2>:5000`
 ```
 APP/
 ├── app.py              # Flask + SocketIO + MQTT + API REST
-├── database.py         # Funciones SQLite (guardar, consultar, limpiar)
+├── database.py         # Funciones SQLite / PostgreSQL (guardar, consultar, limpiar)
 ├── mqtt_client.py      # Conexión HiveMQ, pub/sub, modo automático
 ├── requirements.txt    # Dependencias Python
 ├── deploy.sh           # Script de despliegue para EC2
-├── iot_data.db         # Base de datos SQLite (se crea al iniciar)
+├── iot_data.db         # Base de datos SQLite local (se crea al iniciar)
 ├── templates/
 │   └── index.html      # Dashboard completo (7 secciones)
 └── static/
@@ -184,5 +184,8 @@ eventlet==0.36.1
 - Usar proceso persistente: `nohup python3 app.py > app.log 2>&1 &`
 - Abrir puerto **5000** (TCP) en el Security Group de AWS.
 - Para HTTPS agregar Nginx como proxy reverso.
-- `iot_data.db` se crea automáticamente al iniciar.
+- `iot_data.db` se crea automáticamente al iniciar cuando no se establece `DATABASE_URL`.
+- Para usar PostgreSQL, configura `DATABASE_URL` como:
+  `postgresql://usuario:clave@host:5432/nombre_basedatos`
+- Si necesitas crear la tabla manualmente, usa `create_postgres_table.sql`.
 - Datos mayores a **7 días** se eliminan automáticamente.

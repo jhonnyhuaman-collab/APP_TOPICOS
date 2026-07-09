@@ -1,22 +1,37 @@
-import sqlite3
 import os
+import sqlite3
 from datetime import datetime, timedelta
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "iot_data.db")
+DATABASE_URL = os.environ.get("DATABASE_URL")
+USE_POSTGRES = bool(DATABASE_URL)
+
+if USE_POSTGRES:
+    import psycopg2
+    import psycopg2.extras
 
 
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
+    if USE_POSTGRES:
+        return psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+
+    db_path = os.path.join(os.path.dirname(__file__), "iot_data.db")
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def _sql(sql: str) -> str:
+    if USE_POSTGRES:
+        return sql.replace("?", "%s")
+    return sql
 
 
 def init_db():
     conn = get_connection()
     c = conn.cursor()
-    c.execute("""
+    c.execute(_sql("""
         CREATE TABLE IF NOT EXISTS lecturas (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            id          SERIAL PRIMARY KEY,
             nodo        INTEGER NOT NULL,
             timestamp   TEXT    NOT NULL,
             pulso       REAL,
@@ -30,12 +45,13 @@ def init_db():
             vent_estado INTEGER,
             rssi        INTEGER
         )
-    """)
-    c.execute("CREATE INDEX IF NOT EXISTS idx_nodo_ts ON lecturas(nodo, timestamp)")
-    try:
-        c.execute("ALTER TABLE lecturas ADD COLUMN gas REAL")
-    except sqlite3.OperationalError:
-        pass
+    """))
+    c.execute(_sql("CREATE INDEX IF NOT EXISTS idx_nodo_ts ON lecturas(nodo, timestamp)"))
+    if not USE_POSTGRES:
+        try:
+            c.execute("ALTER TABLE lecturas ADD COLUMN gas REAL")
+        except sqlite3.OperationalError:
+            pass
     conn.commit()
     conn.close()
 
@@ -44,11 +60,11 @@ def guardar_lectura(nodo: int, data: dict):
     conn = get_connection()
     c = conn.cursor()
     ts = data.get("timestamp", datetime.utcnow().isoformat())
-    c.execute("""
+    c.execute(_sql("""
         INSERT INTO lecturas
             (nodo, timestamp, pulso, spo2, temperatura, humedad, co2, presion, gas, luz_estado, vent_estado, rssi)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
+    """), (
         nodo,
         ts,
         data.get("pulso"),
@@ -70,7 +86,7 @@ def limpiar_viejos(dias: int = 7):
     conn = get_connection()
     c = conn.cursor()
     limite = (datetime.utcnow() - timedelta(days=dias)).isoformat()
-    c.execute("DELETE FROM lecturas WHERE timestamp < ?", (limite,))
+    c.execute(_sql("DELETE FROM lecturas WHERE timestamp < ?"), (limite,))
     conn.commit()
     conn.close()
 
@@ -80,10 +96,7 @@ def get_ultimo():
     c = conn.cursor()
     result = {}
     for nodo in [1, 2, 3]:
-        c.execute(
-            "SELECT * FROM lecturas WHERE nodo=? ORDER BY timestamp DESC LIMIT 1",
-            (nodo,)
-        )
+        c.execute(_sql("SELECT * FROM lecturas WHERE nodo=? ORDER BY timestamp DESC LIMIT 1"), (nodo,))
         row = c.fetchone()
         result[f"nodo{nodo:02d}"] = dict(row) if row else None
     conn.close()
@@ -94,10 +107,7 @@ def get_historial(nodo: int, horas: int = 24):
     conn = get_connection()
     c = conn.cursor()
     desde = (datetime.utcnow() - timedelta(hours=horas)).isoformat()
-    c.execute(
-        "SELECT * FROM lecturas WHERE nodo=? AND timestamp>=? ORDER BY timestamp ASC",
-        (nodo, desde)
-    )
+    c.execute(_sql("SELECT * FROM lecturas WHERE nodo=? AND timestamp>=? ORDER BY timestamp ASC"), (nodo, desde))
     rows = [dict(r) for r in c.fetchall()]
     conn.close()
     return rows
@@ -109,10 +119,10 @@ def get_estadisticas():
     desde = (datetime.utcnow() - timedelta(hours=24)).isoformat()
 
     def stats(campo, nodo):
-        c.execute(f"""
+        c.execute(_sql(f"""
             SELECT AVG({campo}), MIN({campo}), MAX({campo})
             FROM lecturas WHERE nodo=? AND timestamp>=? AND {campo} IS NOT NULL
-        """, (nodo, desde))
+        """), (nodo, desde))
         row = c.fetchone()
         if row and row[0] is not None:
             return {"promedio": round(row[0], 1), "minimo": round(row[1], 1), "maximo": round(row[2], 1)}
@@ -134,7 +144,7 @@ def get_estadisticas():
 def get_eventos(limite: int = 50):
     conn = get_connection()
     c = conn.cursor()
-    c.execute("SELECT * FROM lecturas ORDER BY timestamp DESC LIMIT ?", (limite,))
+    c.execute(_sql("SELECT * FROM lecturas ORDER BY timestamp DESC LIMIT ?"), (limite,))
     rows = [dict(r) for r in c.fetchall()]
     conn.close()
     return rows
@@ -144,7 +154,7 @@ def get_historial_csv(horas: int = 24):
     conn = get_connection()
     c = conn.cursor()
     desde = (datetime.utcnow() - timedelta(hours=horas)).isoformat()
-    c.execute("SELECT * FROM lecturas WHERE timestamp>=? ORDER BY timestamp ASC", (desde,))
+    c.execute(_sql("SELECT * FROM lecturas WHERE timestamp>=? ORDER BY timestamp ASC"), (desde,))
     rows = [dict(r) for r in c.fetchall()]
     conn.close()
     return rows
