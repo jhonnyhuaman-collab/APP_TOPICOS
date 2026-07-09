@@ -25,12 +25,17 @@ def init_db():
             humedad     REAL,
             co2         REAL,
             presion     REAL,
+            gas         REAL,
             luz_estado  INTEGER,
             vent_estado INTEGER,
             rssi        INTEGER
         )
     """)
     c.execute("CREATE INDEX IF NOT EXISTS idx_nodo_ts ON lecturas(nodo, timestamp)")
+    try:
+        c.execute("ALTER TABLE lecturas ADD COLUMN gas REAL")
+    except sqlite3.OperationalError:
+        pass
     conn.commit()
     conn.close()
 
@@ -41,8 +46,8 @@ def guardar_lectura(nodo: int, data: dict):
     ts = data.get("timestamp", datetime.utcnow().isoformat())
     c.execute("""
         INSERT INTO lecturas
-            (nodo, timestamp, pulso, spo2, temperatura, humedad, co2, presion, luz_estado, vent_estado, rssi)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (nodo, timestamp, pulso, spo2, temperatura, humedad, co2, presion, gas, luz_estado, vent_estado, rssi)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         nodo,
         ts,
@@ -52,6 +57,7 @@ def guardar_lectura(nodo: int, data: dict):
         data.get("humedad"),
         data.get("co2"),
         data.get("presion"),
+        data.get("gas"),
         1 if data.get("luz") is True else (0 if data.get("luz") is False else None),
         1 if data.get("ventilador") is True else (0 if data.get("ventilador") is False else None),
         data.get("rssi"),
@@ -117,6 +123,7 @@ def get_estadisticas():
         "humedad":     stats("humedad", 2),
         "co2":         stats("co2", 2),
         "presion":     stats("presion", 2),
+        "gas":         stats("gas", 2),
         "pulso":       stats("pulso", 1),
         "spo2":        stats("spo2", 1),
     }

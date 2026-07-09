@@ -54,344 +54,348 @@
   </div>
 </header>
 
+<!-- ═══════════════════════════════════════════════ BANNERS GLOBALES ════════ -->
+<div class="demo-banner" id="demoBanner" style="display:none">
+  <svg viewBox="0 0 20 20" fill="currentColor" width="16"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+  Modo Demo Activo — Datos simulados
+</div>
+<div class="co2-alert-banner" id="co2AlertBanner" style="display:none">
+  <svg viewBox="0 0 20 20" fill="currentColor" width="16"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+  ⚠️ Nivel de CO₂ elevado — Se recomienda ventilar el ambiente
+</div>
+
 <!-- ═══════════════════════════════════════════════ MAIN ════════════════════ -->
 <main class="main-content">
 
-  <!-- BANNER DEMO -->
-  <div class="demo-banner" id="demoBanner" style="display:none">
-    <svg viewBox="0 0 20 20" fill="currentColor" width="16"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
-    Modo Demo Activo — Datos simulados
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       PANEL 1 — NODO 01 · SALUD
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="panel-nodo01">
+    <section class="section">
+      <h2 class="section-title">
+        <span class="section-icon">💗</span> Monitoreo de Salud
+        <span class="last-update" id="lastUpdate">Sin datos</span>
+        <span class="nodo-badge">Nodo 01</span>
+      </h2>
+
+      <!-- Mini-cards resumen -->
+      <div class="summary-grid summary-grid-3">
+        <div class="mini-card" id="cardPulso" data-var="pulso">
+          <div class="mini-card-icon">❤️</div>
+          <div class="mini-card-body">
+            <div class="mini-val" id="valPulso">--</div>
+            <div class="mini-unit">BPM</div>
+            <div class="mini-label">Pulso</div>
+          </div>
+          <div class="mini-trend" id="trendPulso">—</div>
+        </div>
+        <div class="mini-card" id="cardSpo2" data-var="spo2">
+          <div class="mini-card-icon">🫁</div>
+          <div class="mini-card-body">
+            <div class="mini-val" id="valSpo2">--</div>
+            <div class="mini-unit">%</div>
+            <div class="mini-label">SpO₂</div>
+          </div>
+          <div class="mini-trend" id="trendSpo2">—</div>
+        </div>
+        <div class="mini-card" id="cardSistema">
+          <div class="mini-card-icon">⚡</div>
+          <div class="mini-card-body">
+            <div class="mini-val sistema-val" id="valSistema">--</div>
+            <div class="mini-unit"></div>
+            <div class="mini-label">Sistema</div>
+          </div>
+          <div class="mini-trend" id="trendSistema">—</div>
+        </div>
+      </div>
+
+      <!-- Health card principal -->
+      <div class="health-card card" id="healthCard">
+        <div class="gauge-row">
+          <div class="gauge-wrap">
+            <canvas id="gaugePulso" width="160" height="160"></canvas>
+            <div class="gauge-label">
+              <div class="gauge-val" id="gaugePulsoVal">--</div>
+              <div class="gauge-unit">BPM</div>
+              <div class="gauge-name">Pulso</div>
+            </div>
+          </div>
+          <div class="gauge-wrap">
+            <canvas id="gaugeSpo2" width="160" height="160"></canvas>
+            <div class="gauge-label">
+              <div class="gauge-val" id="gaugeSpo2Val">--</div>
+              <div class="gauge-unit">%</div>
+              <div class="gauge-name">SpO₂</div>
+            </div>
+          </div>
+        </div>
+        <div class="sparkline-wrap">
+          <canvas id="sparklinePulso" height="60"></canvas>
+        </div>
+        <div class="health-footer">
+          <span id="healthLastRead">Sin lecturas</span>
+          <span class="nodo-online" id="nodo01Status">⚫ Offline</span>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- BANNER CO2 ALERTA -->
-  <div class="co2-alert-banner" id="co2AlertBanner" style="display:none">
-    <svg viewBox="0 0 20 20" fill="currentColor" width="16"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
-    ⚠️ Nivel de CO₂ elevado — Se recomienda ventilar el ambiente
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       PANEL 2 — NODO 02 · AMBIENTE
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-nodo02">
+    <section class="section">
+      <h2 class="section-title">
+        <span class="section-icon">🌿</span> Ambiente
+        <span class="nodo-badge">Nodo 02</span>
+      </h2>
+
+      <div class="ambient-cards">
+        <!-- Temperatura -->
+        <div class="ambient-item card" id="tempCard">
+          <div class="ambient-header">
+            <span class="ambient-icon">🌡️</span>
+            <span class="ambient-name">Temperatura</span>
+            <span class="nodo-online" id="nodo02Status">⚫ Offline</span>
+          </div>
+          <div class="gauge-semi-wrap">
+            <canvas id="gaugeTempSemi" width="180" height="100"></canvas>
+            <div class="semi-val">
+              <span id="tempVal">--</span>
+              <span class="semi-unit">°C</span>
+            </div>
+          </div>
+        </div>
+        <!-- Humedad -->
+        <div class="ambient-item card" id="humCard">
+          <div class="ambient-header">
+            <span class="ambient-icon">💧</span>
+            <span class="ambient-name">Humedad</span>
+          </div>
+          <div class="hum-val-big"><span id="humVal">--</span><span class="semi-unit">%</span></div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="humBar" style="width:0%"></div>
+            </div>
+            <div class="progress-labels">
+              <span>0%</span><span>50%</span><span>100%</span>
+            </div>
+          </div>
+          <div class="hum-status" id="humStatus">—</div>
+        </div>
+        <!-- CO2 -->
+        <div class="ambient-item card" id="co2Card">
+          <div class="ambient-header">
+            <span class="ambient-icon">🌫️</span>
+            <span class="ambient-name">CO₂</span>
+          </div>
+          <div class="co2-val-big"><span id="co2Val">--</span><span class="semi-unit">ppm</span></div>
+          <div class="semaforo-wrap">
+            <div class="semaforo-dot verde"    id="semVerde"></div>
+            <div class="semaforo-dot amarillo" id="semAmarillo"></div>
+            <div class="semaforo-dot rojo"     id="semRojo"></div>
+          </div>
+          <div class="co2-label" id="co2Label">Sin datos</div>
+        </div>
+        <!-- Presión -->
+        <div class="ambient-item card" id="presCard">
+          <div class="ambient-header">
+            <span class="ambient-icon">🎚️</span>
+            <span class="ambient-name">Presión</span>
+          </div>
+          <div class="stat-val-big"><span id="presVal">--</span><span class="semi-unit">hPa</span></div>
+          <div class="ambient-sub">Presión atmosférica</div>
+        </div>
+        <!-- Gas VOC -->
+        <div class="ambient-item card" id="gasCard">
+          <div class="ambient-header">
+            <span class="ambient-icon">💨</span>
+            <span class="ambient-name">Gas VOC</span>
+          </div>
+          <div class="stat-val-big"><span id="gasVal">--</span><span class="semi-unit">Ω</span></div>
+          <div class="ambient-sub">Calidad del aire (compuestos volátiles)</div>
+        </div>
+      </div>
+
+      <!-- Gráfica histórico ambiente -->
+      <div class="card chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Histórico Ambiente</span>
+          <div class="range-btns" id="rangeAmbiente">
+            <button class="range-btn active" data-h="1">1h</button>
+            <button class="range-btn" data-h="6">6h</button>
+            <button class="range-btn" data-h="24">24h</button>
+            <button class="range-btn" data-h="168">7d</button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartAmbiente"></canvas>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- ── SECCIÓN 1: RESUMEN RÁPIDO ─────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">
-      <span class="section-icon">⚡</span> Resumen en Tiempo Real
-      <span class="last-update" id="lastUpdate">Sin datos</span>
-    </h2>
-    <div class="summary-grid">
-      <div class="mini-card" id="cardPulso" data-var="pulso">
-        <div class="mini-card-icon">❤️</div>
-        <div class="mini-card-body">
-          <div class="mini-val" id="valPulso">--</div>
-          <div class="mini-unit">BPM</div>
-          <div class="mini-label">Pulso</div>
-        </div>
-        <div class="mini-trend" id="trendPulso">—</div>
-      </div>
-      <div class="mini-card" id="cardSpo2" data-var="spo2">
-        <div class="mini-card-icon">🫁</div>
-        <div class="mini-card-body">
-          <div class="mini-val" id="valSpo2">--</div>
-          <div class="mini-unit">%</div>
-          <div class="mini-label">SpO₂</div>
-        </div>
-        <div class="mini-trend" id="trendSpo2">—</div>
-      </div>
-      <div class="mini-card" id="cardTemp" data-var="temp">
-        <div class="mini-card-icon">🌡️</div>
-        <div class="mini-card-body">
-          <div class="mini-val" id="valTemp">--</div>
-          <div class="mini-unit">°C</div>
-          <div class="mini-label">Temperatura</div>
-        </div>
-        <div class="mini-trend" id="trendTemp">—</div>
-      </div>
-      <div class="mini-card" id="cardHumedad" data-var="humedad">
-        <div class="mini-card-icon">💧</div>
-        <div class="mini-card-body">
-          <div class="mini-val" id="valHumedad">--</div>
-          <div class="mini-unit">%</div>
-          <div class="mini-label">Humedad</div>
-        </div>
-        <div class="mini-trend" id="trendHumedad">—</div>
-      </div>
-      <div class="mini-card" id="cardCo2" data-var="co2">
-        <div class="mini-card-icon">🌫️</div>
-        <div class="mini-card-body">
-          <div class="mini-val" id="valCo2">--</div>
-          <div class="mini-unit">ppm</div>
-          <div class="mini-label">CO₂</div>
-        </div>
-        <div class="mini-trend" id="trendCo2">—</div>
-      </div>
-      <div class="mini-card" id="cardSistema">
-        <div class="mini-card-icon">⚡</div>
-        <div class="mini-card-body">
-          <div class="mini-val sistema-val" id="valSistema">--</div>
-          <div class="mini-unit"></div>
-          <div class="mini-label">Sistema</div>
-        </div>
-        <div class="mini-trend" id="trendSistema">—</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SECCIÓN 2: SALUD ───────────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">
-      <span class="section-icon">💗</span> Monitoreo de Salud
-      <span class="nodo-badge">Nodo 01</span>
-    </h2>
-    <div class="health-card card" id="healthCard">
-      <div class="gauge-row">
-        <div class="gauge-wrap">
-          <canvas id="gaugePulso" width="160" height="160"></canvas>
-          <div class="gauge-label">
-            <div class="gauge-val" id="gaugePulsoVal">--</div>
-            <div class="gauge-unit">BPM</div>
-            <div class="gauge-name">Pulso</div>
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       PANEL 3 — NODO 03 · CONTROL
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-nodo03">
+    <section class="section">
+      <h2 class="section-title">
+        <span class="section-icon">🎛️</span> Control Actuadores
+        <span class="nodo-badge">Nodo 03</span>
+      </h2>
+      <div class="actuators-grid">
+        <!-- LUZ -->
+        <div class="actuator-card card" id="luzCard">
+          <div class="actuator-icon-wrap" id="luzIconWrap">
+            <svg class="actuator-icon" id="luzIcon" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="26" r="12" stroke="currentColor" stroke-width="3" fill="none"/>
+              <path d="M26 38 c0 4 2 8 6 8 s6-4 6-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <line x1="32" y1="8"  x2="32" y2="4"  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="32" y1="48" x2="32" y2="52" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="50" y1="26" x2="54" y2="26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="10" y1="26" x2="14" y2="26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="45.3" y1="11.7" x2="48.2" y2="8.8"  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="15.8" y1="41.2" x2="18.7" y2="38.3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="45.3" y1="40.3" x2="48.2" y2="43.2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="15.8" y1="10.8" x2="18.7" y2="13.7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
           </div>
-        </div>
-        <div class="gauge-wrap">
-          <canvas id="gaugeSpo2" width="160" height="160"></canvas>
-          <div class="gauge-label">
-            <div class="gauge-val" id="gaugeSpo2Val">--</div>
-            <div class="gauge-unit">%</div>
-            <div class="gauge-name">SpO₂</div>
+          <div class="actuator-info">
+            <div class="actuator-name">Iluminación</div>
+            <div class="actuator-state" id="luzState">Apagada</div>
+            <div class="actuator-last" id="luzLast">—</div>
           </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="luzToggle" onchange="enviarComando(this.checked?'LUZ_ON':'LUZ_OFF','luz')" />
+            <span class="toggle-slider"></span>
+          </label>
         </div>
-      </div>
-      <div class="sparkline-wrap">
-        <canvas id="sparklinePulso" height="60"></canvas>
-      </div>
-      <div class="health-footer">
-        <span id="healthLastRead">Sin lecturas</span>
-        <span class="nodo-online" id="nodo01Status">⚫ Offline</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- ── SECCIÓN 3: AMBIENTE ────────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">
-      <span class="section-icon">🌿</span> Ambiente
-      <span class="nodo-badge">Nodo 02</span>
-    </h2>
-    <div class="ambient-cards">
-      <!-- Temperatura -->
-      <div class="ambient-item card" id="tempCard">
-        <div class="ambient-header">
-          <span class="ambient-icon">🌡️</span>
-          <span class="ambient-name">Temperatura</span>
-          <span class="nodo-online" id="nodo02Status">⚫ Offline</span>
-        </div>
-        <div class="gauge-semi-wrap">
-          <canvas id="gaugeTempSemi" width="180" height="100"></canvas>
-          <div class="semi-val">
-            <span id="tempVal">--</span>
-            <span class="semi-unit">°C</span>
+        <!-- VENTILADOR -->
+        <div class="actuator-card card" id="ventCard">
+          <div class="actuator-icon-wrap">
+            <svg class="actuator-icon vent-icon" id="ventIcon" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="5" fill="currentColor"/>
+              <path d="M32 27 C32 20 27 14 20 14 C17 14 15 17 17 20 C19 23 24 24 27 27Z" fill="currentColor" opacity="0.8"/>
+              <path d="M37 32 C44 32 50 27 50 20 C50 17 47 15 44 17 C41 19 40 24 37 27Z" fill="currentColor" opacity="0.8"/>
+              <path d="M32 37 C32 44 37 50 44 50 C47 50 49 47 47 44 C45 41 40 40 37 37Z" fill="currentColor" opacity="0.8"/>
+              <path d="M27 32 C20 32 14 37 14 44 C14 47 17 49 20 47 C23 45 24 40 27 37Z" fill="currentColor" opacity="0.8"/>
+            </svg>
           </div>
-        </div>
-      </div>
-      <!-- Humedad -->
-      <div class="ambient-item card" id="humCard">
-        <div class="ambient-header">
-          <span class="ambient-icon">💧</span>
-          <span class="ambient-name">Humedad</span>
-        </div>
-        <div class="hum-val-big"><span id="humVal">--</span><span class="semi-unit">%</span></div>
-        <div class="progress-bar-wrap">
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="humBar" style="width:0%"></div>
+          <div class="actuator-info">
+            <div class="actuator-name">Ventilador</div>
+            <div class="actuator-state" id="ventState">Apagado</div>
+            <div class="actuator-last" id="ventLast">—</div>
           </div>
-          <div class="progress-labels">
-            <span>0%</span><span>50%</span><span>100%</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="ventToggle" onchange="enviarComando(this.checked?'VENT_ON':'VENT_OFF','vent')" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- MODO AUTO -->
+        <div class="actuator-card card auto-card" id="autoCard">
+          <div class="actuator-icon-wrap auto-icon-wrap">
+            <svg class="actuator-icon" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="20" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="6 3"/>
+              <path d="M24 32 l5 5 11-11" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
+          <div class="actuator-info">
+            <div class="actuator-name">Modo Automático</div>
+            <div class="actuator-state" id="autoState">Desactivado</div>
+            <div class="actuator-last auto-rule">CO₂ &gt; 1000 ppm → Ventilador ON</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoToggle" onchange="toggleAutoMode(this.checked)" />
+            <span class="toggle-slider"></span>
+          </label>
         </div>
-        <div class="hum-status" id="humStatus">—</div>
       </div>
-      <!-- CO2 -->
-      <div class="ambient-item card" id="co2Card">
-        <div class="ambient-header">
-          <span class="ambient-icon">🌫️</span>
-          <span class="ambient-name">CO₂</span>
-        </div>
-        <div class="co2-val-big"><span id="co2Val">--</span><span class="semi-unit">ppm</span></div>
-        <div class="semaforo-wrap">
-          <div class="semaforo-dot verde"  id="semVerde"></div>
-          <div class="semaforo-dot amarillo" id="semAmarillo"></div>
-          <div class="semaforo-dot rojo"   id="semRojo"></div>
-        </div>
-        <div class="co2-label" id="co2Label">Sin datos</div>
-      </div>
-    </div>
+    </section>
 
-    <!-- Gráfica ambiente -->
-    <div class="card chart-card">
-      <div class="chart-header">
-        <span class="chart-title">Histórico Ambiente</span>
-        <div class="range-btns" id="rangeAmbiente">
-          <button class="range-btn active" data-h="1">1h</button>
-          <button class="range-btn" data-h="6">6h</button>
-          <button class="range-btn" data-h="24">24h</button>
-          <button class="range-btn" data-h="168">7d</button>
-        </div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartAmbiente"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SECCIÓN 4: ACTUADORES ──────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">
-      <span class="section-icon">🎛️</span> Control Actuadores
-      <span class="nodo-badge">Nodo 03</span>
-    </h2>
-    <div class="actuators-grid">
-      <!-- LUZ -->
-      <div class="actuator-card card" id="luzCard">
-        <div class="actuator-icon-wrap" id="luzIconWrap">
-          <svg class="actuator-icon" id="luzIcon" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="26" r="12" stroke="currentColor" stroke-width="3" fill="none"/>
-            <path d="M26 38 c0 4 2 8 6 8 s6-4 6-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-            <line x1="32" y1="8"  x2="32" y2="4"  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="32" y1="48" x2="32" y2="52" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="50" y1="26" x2="54" y2="26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="10" y1="26" x2="14" y2="26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="45.3" y1="11.7" x2="48.2" y2="8.8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="15.8" y1="41.2" x2="18.7" y2="38.3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="45.3" y1="40.3" x2="48.2" y2="43.2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="15.8" y1="10.8" x2="18.7" y2="13.7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="actuator-info">
-          <div class="actuator-name">Iluminación</div>
-          <div class="actuator-state" id="luzState">Apagada</div>
-          <div class="actuator-last" id="luzLast">—</div>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" id="luzToggle" onchange="enviarComando(this.checked?'LUZ_ON':'LUZ_OFF','luz')" />
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-
-      <!-- VENTILADOR -->
-      <div class="actuator-card card" id="ventCard">
-        <div class="actuator-icon-wrap">
-          <svg class="actuator-icon vent-icon" id="ventIcon" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="32" r="5" fill="currentColor"/>
-            <path d="M32 27 C32 20 27 14 20 14 C17 14 15 17 17 20 C19 23 24 24 27 27Z" fill="currentColor" opacity="0.8"/>
-            <path d="M37 32 C44 32 50 27 50 20 C50 17 47 15 44 17 C41 19 40 24 37 27Z" fill="currentColor" opacity="0.8"/>
-            <path d="M32 37 C32 44 37 50 44 50 C47 50 49 47 47 44 C45 41 40 40 37 37Z" fill="currentColor" opacity="0.8"/>
-            <path d="M27 32 C20 32 14 37 14 44 C14 47 17 49 20 47 C23 45 24 40 27 37Z" fill="currentColor" opacity="0.8"/>
-          </svg>
-        </div>
-        <div class="actuator-info">
-          <div class="actuator-name">Ventilador</div>
-          <div class="actuator-state" id="ventState">Apagado</div>
-          <div class="actuator-last" id="ventLast">—</div>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" id="ventToggle" onchange="enviarComando(this.checked?'VENT_ON':'VENT_OFF','vent')" />
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-
-      <!-- MODO AUTO -->
-      <div class="actuator-card card auto-card" id="autoCard">
-        <div class="actuator-icon-wrap auto-icon-wrap">
-          <svg class="actuator-icon" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="32" r="20" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="6 3"/>
-            <path d="M24 32 l5 5 11-11" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="actuator-info">
-          <div class="actuator-name">Modo Automático</div>
-          <div class="actuator-state" id="autoState">Desactivado</div>
-          <div class="actuator-last auto-rule">CO₂ &gt; 1000 ppm → Ventilador ON</div>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" id="autoToggle" onchange="toggleAutoMode(this.checked)" />
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SECCIÓN 5: ESTADÍSTICAS ────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">
-      <span class="section-icon">📊</span> Estadísticas del Día
-    </h2>
-    <div class="card stats-card">
-      <table class="stats-table">
-        <thead>
-          <tr>
-            <th>Variable</th>
-            <th>Promedio</th>
-            <th>Mínimo</th>
-            <th>Máximo</th>
-          </tr>
-        </thead>
-        <tbody id="statsTableBody">
-          <tr><td colspan="4" class="stats-loading">Cargando estadísticas…</td></tr>
-        </tbody>
-      </table>
-      <button class="btn-refresh" onclick="cargarEstadisticas()">
-        <svg viewBox="0 0 20 20" fill="currentColor" width="14"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
-        Actualizar
-      </button>
-    </div>
-  </section>
-
-  <!-- ── SECCIÓN 6: HISTORIAL ───────────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">
-      <span class="section-icon">📈</span> Historial y Gráficas
-    </h2>
-    <div class="card chart-card">
-      <div class="chart-header chart-header-hist">
-        <div class="chart-selectors">
-          <select id="selectVarHist" class="select-styled" onchange="cargarHistorial()">
-            <option value="temperatura">Temperatura (°C)</option>
-            <option value="humedad">Humedad (%)</option>
-            <option value="co2">CO₂ (ppm)</option>
-            <option value="pulso">Pulso (BPM)</option>
-            <option value="spo2">SpO₂ (%)</option>
-          </select>
-        </div>
-        <div class="range-btns" id="rangeHistorial">
-          <button class="range-btn active" data-h="1">1h</button>
-          <button class="range-btn" data-h="6">6h</button>
-          <button class="range-btn" data-h="24">24h</button>
-          <button class="range-btn" data-h="168">7d</button>
-        </div>
-      </div>
-      <div class="chart-container chart-big">
-        <canvas id="chartHistorial"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SECCIÓN 7: LOG DE EVENTOS ──────────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">
-      <span class="section-icon">📋</span> Log de Eventos
-      <div class="log-actions">
-        <button class="btn-sm" onclick="toggleLog()">
-          <span id="logToggleText">Expandir</span>
+    <!-- Estadísticas del día dentro del panel Nodo 03 -->
+    <section class="section">
+      <h2 class="section-title">
+        <span class="section-icon">📊</span> Estadísticas del Día
+      </h2>
+      <div class="card stats-card">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Promedio</th>
+              <th>Mínimo</th>
+              <th>Máximo</th>
+            </tr>
+          </thead>
+          <tbody id="statsTableBody">
+            <tr><td colspan="4" class="stats-loading">Cargando estadísticas…</td></tr>
+          </tbody>
+        </table>
+        <button class="btn-refresh" onclick="cargarEstadisticas()">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="14"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+          Actualizar
         </button>
-        <a class="btn-sm" href="/api/exportar_csv?horas=24" download>
-          <svg viewBox="0 0 20 20" fill="currentColor" width="13"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-          CSV
-        </a>
       </div>
-    </h2>
-    <div class="card log-card" id="logCard" style="display:none">
-      <div class="log-list" id="logList">
-        <div class="log-empty">Sin eventos registrados</div>
+    </section>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       PANEL 4 — ESTADÍSTICAS
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-stats">
+    <section class="section">
+      <h2 class="section-title">
+        <span class="section-icon">📈</span> Historial y Gráficas
+      </h2>
+      <div class="card chart-card">
+        <div class="chart-header chart-header-hist">
+          <div class="chart-selectors">
+            <select id="selectVarHist" class="select-styled" onchange="cargarHistorial()">
+              <option value="temperatura">Temperatura (°C)</option>
+              <option value="humedad">Humedad (%)</option>
+              <option value="co2">CO₂ (ppm)</option>
+              <option value="presion">Presión (hPa)</option>
+              <option value="gas">Gas VOC (Ω)</option>
+              <option value="pulso">Pulso (BPM)</option>
+              <option value="spo2">SpO₂ (%)</option>
+            </select>
+          </div>
+          <div class="range-btns" id="rangeHistorial">
+            <button class="range-btn active" data-h="1">1h</button>
+            <button class="range-btn" data-h="6">6h</button>
+            <button class="range-btn" data-h="24">24h</button>
+            <button class="range-btn" data-h="168">7d</button>
+          </div>
+        </div>
+        <div class="chart-container chart-big">
+          <canvas id="chartHistorial"></canvas>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">
+        <span class="section-icon">📋</span> Log de Eventos
+        <div class="log-actions">
+          <button class="btn-sm" onclick="toggleLog()">
+            <span id="logToggleText">Expandir</span>
+          </button>
+          <a class="btn-sm" href="/api/exportar_csv?horas=24" download>
+            <svg viewBox="0 0 20 20" fill="currentColor" width="13"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            CSV
+          </a>
+        </div>
+      </h2>
+      <div class="card log-card" id="logCard" style="display:none">
+        <div class="log-list" id="logList">
+          <div class="log-empty">Sin eventos registrados</div>
+        </div>
+      </div>
+    </section>
+  </div>
 
 </main>
 
@@ -409,6 +413,48 @@
     </button>
   </div>
 </footer>
+
+<!-- ═══════════════════════════════════════════════ TAB NAV (bottom) ════════ -->
+<nav class="tab-nav" id="tabNav">
+  <!-- Nodo 01 — Salud -->
+  <button class="tab-btn active" data-tab="nodo01" onclick="switchTab('nodo01')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+    <span>Salud</span>
+  </button>
+  <!-- Nodo 02 — Ambiente -->
+  <button class="tab-btn" data-tab="nodo02" onclick="switchTab('nodo02')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 8C8 10 5.9 16.17 3.82 19c0 0 8.44-1.51 12.68-9C15 19 10.5 23 6 23c0 0 10-3 13-13 1-3 2-8-2-10z"/>
+    </svg>
+    <span>Ambiente</span>
+  </button>
+  <!-- Nodo 03 — Control -->
+  <button class="tab-btn" data-tab="nodo03" onclick="switchTab('nodo03')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="21" x2="4" y2="14"/>
+      <line x1="4" y1="10" x2="4" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="12"/>
+      <line x1="12" y1="8"  x2="12" y2="3"/>
+      <line x1="20" y1="21" x2="20" y2="16"/>
+      <line x1="20" y1="12" x2="20" y2="3"/>
+      <line x1="1"  y1="14" x2="7"  y2="14"/>
+      <line x1="9"  y1="8"  x2="15" y2="8"/>
+      <line x1="17" y1="16" x2="23" y2="16"/>
+    </svg>
+    <span>Control</span>
+  </button>
+  <!-- Estadísticas -->
+  <button class="tab-btn" data-tab="stats" onclick="switchTab('stats')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6"  y1="20" x2="6"  y2="14"/>
+    </svg>
+    <span>Estadísticas</span>
+  </button>
+</nav>
 
 <!-- ═══════════════════════════════════════════════ SCRIPTS ═════════════════ -->
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>

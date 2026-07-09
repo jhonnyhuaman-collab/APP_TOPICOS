@@ -41,6 +41,9 @@ const COLORS = {
   red:    "#FF4757",
   yellow: "#FFA502",
   green:  "#2ED573",
+  blue:   "#54A0FF",
+  orange: "#FF6348",
+  purple: "#A29BFE",
 };
 
 Chart.defaults.color = "#7A9BB5";
@@ -161,13 +164,9 @@ const sparkData = { pulso: [], spo2: [], temperatura: [], humedad: [], co2: [] }
 function actualizarResumen() {
   const n1 = state.nodo01;
   const n2 = state.nodo02;
-  const n3 = state.nodo03;
 
-  setMiniCard("Pulso",   "valPulso",   "cardPulso",   "trendPulso",   n1.pulso,       state.prev.pulso,       "pulso");
-  setMiniCard("SpO₂",    "valSpo2",    "cardSpo2",    "trendSpo2",    n1.spo2,        state.prev.spo2,        "spo2");
-  setMiniCard("Temp",    "valTemp",    "cardTemp",    "trendTemp",    n2.temperatura, state.prev.temperatura, "temperatura");
-  setMiniCard("Humedad", "valHumedad", "cardHumedad", "trendHumedad", n2.humedad,     state.prev.humedad,     "humedad");
-  setMiniCard("CO₂",     "valCo2",     "cardCo2",     "trendCo2",     n2.co2,         state.prev.co2,         "co2");
+  setMiniCard("Pulso", "valPulso", "cardPulso", "trendPulso", n1.pulso, state.prev.pulso, "pulso");
+  setMiniCard("SpO₂",  "valSpo2",  "cardSpo2",  "trendSpo2",  n1.spo2,  state.prev.spo2,  "spo2");
 
   // Sistema
   const sistCard = document.getElementById("cardSistema");
@@ -331,7 +330,7 @@ function actualizarSparkline(pulso) {
 
 // ── AMBIENTE ──────────────────────────────────────────────────────────────────
 function actualizarAmbiente(data) {
-  const { temperatura, humedad, co2 } = data;
+  const { temperatura, humedad, co2, presion, gas } = data;
 
   // Temperatura
   if (temperatura != null) {
@@ -360,6 +359,16 @@ function actualizarAmbiente(data) {
     else                       document.getElementById("semRojo").classList.add("activo");
     document.getElementById("co2Label").textContent =
       clCo2 === "ok" ? "Nivel normal" : clCo2 === "precaucion" ? "Nivel elevado" : "¡Nivel peligroso!";
+  }
+
+  // Presión
+  if (presion != null) {
+    document.getElementById("presVal").textContent = presion.toFixed(1);
+  }
+
+  // Gas VOC
+  if (gas != null) {
+    document.getElementById("gasVal").textContent = Math.round(gas).toLocaleString("es-PE");
   }
 
   // Nodo 02 status
@@ -399,7 +408,7 @@ function dibujarGaugeSemi(canvasId, valor, min, max, color) {
 }
 
 // ── CHART AMBIENTE ────────────────────────────────────────────────────────────
-const ambienteBuffer = { labels: [], temperatura: [], humedad: [], co2: [] };
+const ambienteBuffer = { labels: [], temperatura: [], humedad: [], co2: [], presion: [], gas: [] };
 
 function actualizarChartAmbiente() {
   const ahora = new Date().toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
@@ -407,18 +416,24 @@ function actualizarChartAmbiente() {
   ambienteBuffer.temperatura.push(state.nodo02.temperatura);
   ambienteBuffer.humedad.push(state.nodo02.humedad);
   ambienteBuffer.co2.push(state.nodo02.co2);
+  ambienteBuffer.presion.push(state.nodo02.presion);
+  ambienteBuffer.gas.push(state.nodo02.gas);
   const maxPuntos = 60;
   if (ambienteBuffer.labels.length > maxPuntos) {
     ambienteBuffer.labels.shift();
     ambienteBuffer.temperatura.shift();
     ambienteBuffer.humedad.shift();
     ambienteBuffer.co2.shift();
+    ambienteBuffer.presion.shift();
+    ambienteBuffer.gas.shift();
   }
   if (chartAmbiente) {
     chartAmbiente.data.labels                 = ambienteBuffer.labels;
     chartAmbiente.data.datasets[0].data       = ambienteBuffer.temperatura;
     chartAmbiente.data.datasets[1].data       = ambienteBuffer.humedad;
     chartAmbiente.data.datasets[2].data       = ambienteBuffer.co2;
+    chartAmbiente.data.datasets[3].data       = ambienteBuffer.presion;
+    chartAmbiente.data.datasets[4].data       = ambienteBuffer.gas;
     chartAmbiente.update("none");
   }
 }
@@ -470,6 +485,28 @@ function initChartAmbiente() {
           fill: false,
           yAxisID: "y2",
         },
+        {
+          label: "Presión hPa",
+          data: ambienteBuffer.presion,
+          borderColor: COLORS.blue,
+          borderWidth: 2,
+          tension: 0.4,
+          pointRadius: 0,
+          fill: false,
+          yAxisID: "y3",
+          hidden: true,
+        },
+        {
+          label: "Gas VOC Ω",
+          data: ambienteBuffer.gas,
+          borderColor: COLORS.orange,
+          borderWidth: 2,
+          tension: 0.4,
+          pointRadius: 0,
+          fill: false,
+          yAxisID: "y4",
+          hidden: true,
+        },
       ],
     },
     options: {
@@ -500,6 +537,8 @@ function initChartAmbiente() {
           ticks: { font: { size: 10 }, color: COLORS.yellow },
           grid: { drawOnChartArea: false },
         },
+        y3: { display: false },
+        y4: { display: false },
       },
     },
   });
@@ -524,11 +563,15 @@ async function cargarHistorialAmbiente(horas = 1) {
     ambienteBuffer.temperatura = rows.map((r) => r.temperatura);
     ambienteBuffer.humedad     = rows.map((r) => r.humedad);
     ambienteBuffer.co2         = rows.map((r) => r.co2);
+    ambienteBuffer.presion     = rows.map((r) => r.presion);
+    ambienteBuffer.gas         = rows.map((r) => r.gas);
     if (chartAmbiente) {
       chartAmbiente.data.labels                 = ambienteBuffer.labels;
       chartAmbiente.data.datasets[0].data       = ambienteBuffer.temperatura;
       chartAmbiente.data.datasets[1].data       = ambienteBuffer.humedad;
       chartAmbiente.data.datasets[2].data       = ambienteBuffer.co2;
+      chartAmbiente.data.datasets[3].data       = ambienteBuffer.presion;
+      chartAmbiente.data.datasets[4].data       = ambienteBuffer.gas;
       chartAmbiente.update();
     }
   } catch (err) { console.error("Error cargando historial ambiente:", err); }
@@ -612,6 +655,8 @@ async function cargarEstadisticas() {
       ["temperatura", "Temperatura", "°C"],
       ["humedad",     "Humedad",     "%"],
       ["co2",         "CO₂",         "ppm"],
+      ["presion",     "Presión",     "hPa"],
+      ["gas",         "Gas VOC",     "Ω"],
       ["pulso",       "Pulso",       "BPM"],
       ["spo2",        "SpO₂",        "%"],
     ];
@@ -683,7 +728,7 @@ function initChartHistorial() {
 }
 
 const varNodo = {
-  temperatura: 2, humedad: 2, co2: 2, presion: 2,
+  temperatura: 2, humedad: 2, co2: 2, presion: 2, gas: 2,
   pulso: 1, spo2: 1,
 };
 
@@ -702,8 +747,10 @@ async function cargarHistorial() {
       temperatura: COLORS.red,
       humedad:     COLORS.teal,
       co2:         COLORS.yellow,
+      presion:     COLORS.blue,
+      gas:         COLORS.orange,
       pulso:       COLORS.green,
-      spo2:        "#A29BFE",
+      spo2:        COLORS.purple,
     };
 
     chartHistorial.data.labels = rows.map((r) => r.timestamp.slice(11, 19));
@@ -816,6 +863,23 @@ async function cargarEstadoMqtt() {
     actualizarMqttUI();
     document.getElementById("autoToggle").checked = state.autoMode;
   } catch (err) {}
+}
+
+// ── Tab navigation ────────────────────────────────────────────────────────────
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+
+  const panel = document.getElementById("panel-" + tabId);
+  const btn   = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  if (panel) panel.classList.add("active");
+  if (btn)   btn.classList.add("active");
+
+  // Forzar resize de gráficas al hacer visible su panel
+  requestAnimationFrame(() => {
+    if (tabId === "nodo02" && chartAmbiente)  chartAmbiente.resize();
+    if (tabId === "stats"  && chartHistorial) chartHistorial.resize();
+  });
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────

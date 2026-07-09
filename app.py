@@ -75,6 +75,7 @@ _demo_state = {
     "temperatura": 23.0,
     "humedad":     62.0,
     "co2":         450.0,
+    "gas":         50000.0,
     "pulso":       72.0,
     "spo2":        98.0,
     "luz":         False,
@@ -106,11 +107,14 @@ def _demo_loop():
         _demo_state["humedad"]      = max(50, min(75, _demo_state["humedad"]))
         _demo_state["co2"]         += random.uniform(-5, 8)
         _demo_state["co2"]          = max(380, min(1100, _demo_state["co2"]))
+        _demo_state["gas"]         += random.uniform(-1500, 1500)
+        _demo_state["gas"]          = max(20000, min(80000, _demo_state["gas"]))
         d2 = {
             "temperatura": round(_demo_state["temperatura"], 1),
             "humedad":     round(_demo_state["humedad"], 1),
             "co2":         round(_demo_state["co2"], 0),
             "presion":     round(1013 + random.gauss(0, 0.3), 1),
+            "gas":         round(_demo_state["gas"], 0),
             "timestamp":   ts,
         }
         on_mqtt_data(2, d2)
@@ -228,7 +232,7 @@ def api_exportar_csv():
     rows  = db.get_historial_csv(horas)
     output = io.StringIO()
     fieldnames = ["id", "nodo", "timestamp", "pulso", "spo2",
-                  "temperatura", "humedad", "co2", "presion",
+                  "temperatura", "humedad", "co2", "presion", "gas",
                   "luz_estado", "vent_estado", "rssi"]
     writer = csv.DictWriter(output, fieldnames=fieldnames, extrasaction="ignore")
     writer.writeheader()
